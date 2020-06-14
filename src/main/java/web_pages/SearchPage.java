@@ -103,9 +103,9 @@ public class SearchPage implements WebPage{
         return currency;
     }
 
-    public List<Good> getListOfGoods(){
+    public List<Commodity> getListOfGoods(){
         List<WebElement> list = driver.findElements(PRODUCT_DESCRIPTION);
-        List<Good> goodsList = new ArrayList<Good>();
+        List<Commodity> goodsList = new ArrayList<Commodity>();
 
         for(int i = 0; i < list.size(); i++){
 
@@ -124,8 +124,8 @@ public class SearchPage implements WebPage{
                 discount = list.get(i).findElement(By.xpath("./div/span[@class=\"discount-percentage\"]")).getText();
             }
 
-            Good good = new Good(name, actualPrice, realPrice, discount);
-            goodsList.add(good);
+            Commodity commodity = new Commodity(name, actualPrice, realPrice, discount);
+            goodsList.add(commodity);
 
         }
         logger.info("A List of goods on the page was created and sent");

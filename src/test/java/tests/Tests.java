@@ -30,10 +30,10 @@ public class Tests {
         homePage.open();
         Assert.assertTrue(homePage.atPage());
         char headerCurrency = homePage.getCurrencyOnHeader();
-        List<Good> list = homePage.getListOfGoods();
+        List<Commodity> commodities = homePage.getListOfGoods();
         boolean result = true;
-        for(Good good: list){
-            if (good.getCurrency() != headerCurrency){
+        for(Commodity commodity : commodities){
+            if (commodity.getCurrency() != headerCurrency){
                 result = false;
                 break;
             }
@@ -60,12 +60,12 @@ public class Tests {
         homePage.switchCurrency("usd");
         SearchPage searchPage = homePage.search("dress");
         Assert.assertTrue(searchPage.atPage());
-        List<Good> list = searchPage.getListOfGoods();
+        List<Commodity> commodities = searchPage.getListOfGoods();
         char car = searchPage.getCurrencyOnHeader();
         boolean result = true;
 
-        for(Good good: list){
-            if(good.getCurrency() != car){
+        for(Commodity commodity : commodities){
+            if(commodity.getCurrency() != car){
                 result = false;
                 break;
             }
@@ -83,14 +83,14 @@ public class Tests {
         SearchPage searchPage = homePage.search("dress");
         Assert.assertTrue(searchPage.atPage());
         searchPage.sortGoods("desc");
-        List<Good> list = searchPage.getListOfGoods();
+        List<Commodity> commodities = searchPage.getListOfGoods();
 
-        double price = list.get(0).getBasicPrice();
+        double price = commodities.get(0).getBasicPrice();
         boolean result = true;
 
-        for(Good good: list){
-            if(good.getBasicPrice() <= price){
-                price = good.getBasicPrice();
+        for(Commodity commodity : commodities){
+            if(commodity.getBasicPrice() <= price){
+                price = commodity.getBasicPrice();
             }
             else{
                 result = false;
@@ -110,14 +110,14 @@ public class Tests {
         SearchPage searchPage = homePage.search("dress");
         Assert.assertTrue(searchPage.atPage());
         searchPage.sortGoods("desc");
-        List<Good> list = searchPage.getListOfGoods();
+        List<Commodity> commodities = searchPage.getListOfGoods();
         boolean result = true;
 
-        for(Good good: list){
-            if(good.getDiscount() > 0.0){
-                double expectedPriceWithDiscount = (Math.round((good.getBasicPrice() *
-                        ((100.0 - good.getDiscount()) / 100.0)) * 100.0) / 100.0);
-                if(expectedPriceWithDiscount != good.getActualPrice()){
+        for(Commodity commodity : commodities){
+            if(commodity.getDiscount() > 0.0){
+                double expectedPriceWithDiscount = (Math.round((commodity.getBasicPrice() *
+                        ((100.0 - commodity.getDiscount()) / 100.0)) * 100.0) / 100.0);
+                if(expectedPriceWithDiscount != commodity.getActualPrice()){
                     result = false;
                     break;
                 }

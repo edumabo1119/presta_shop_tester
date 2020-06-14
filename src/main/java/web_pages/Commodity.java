@@ -1,6 +1,6 @@
 package web_pages;
 
-public class Good {
+public class Commodity {
     String name;
     char currency;
     double actualPrice;
@@ -8,7 +8,7 @@ public class Good {
     double discount;
 
 
-    public Good(String name, String actualPrice, String basicPrice, String discount){
+    public Commodity(String name, String actualPrice, String basicPrice, String discount){
         this.name = name;
         this.currency = actualPrice.charAt(actualPrice.length() - 1);
 
