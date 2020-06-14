@@ -1,0 +1,159 @@
+Index: src/main/java/web_pages/Good.java
+===================================================================
+--- src/main/java/web_pages/Good.java	(revision 8275a6b069c6e8063d7fbb97f16322dfce0d12ce)
++++ src/main/java/web_pages/Commodity.java	(date 1592175787822)
+@@ -1,6 +1,6 @@
+ package web_pages;
+ 
+-public class Good {
++public class Commodity {
+     String name;
+     char currency;
+     double actualPrice;
+@@ -8,7 +8,7 @@
+     double discount;
+ 
+ 
+-    public Good(String name, String actualPrice, String basicPrice, String discount){
++    public Commodity(String name, String actualPrice, String basicPrice, String discount){
+         this.name = name;
+         this.currency = actualPrice.charAt(actualPrice.length() - 1);
+ 
+Index: src/test/java/tests/Tests.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/test/java/tests/Tests.java	(revision 8275a6b069c6e8063d7fbb97f16322dfce0d12ce)
++++ src/test/java/tests/Tests.java	(date 1592175855933)
+@@ -30,10 +30,10 @@
+         homePage.open();
+         Assert.assertTrue(homePage.atPage());
+         char headerCurrency = homePage.getCurrencyOnHeader();
+-        List<Good> list = homePage.getListOfGoods();
++        List<Commodity> commodities = homePage.getListOfGoods();
+         boolean result = true;
+-        for(Good good: list){
+-            if (good.getCurrency() != headerCurrency){
++        for(Commodity commodity : commodities){
++            if (commodity.getCurrency() != headerCurrency){
+                 result = false;
+                 break;
+             }
+@@ -60,12 +60,12 @@
+         homePage.switchCurrency("usd");
+         SearchPage searchPage = homePage.search("dress");
+         Assert.assertTrue(searchPage.atPage());
+-        List<Good> list = searchPage.getListOfGoods();
++        List<Commodity> commodities = searchPage.getListOfGoods();
+         char car = searchPage.getCurrencyOnHeader();
+         boolean result = true;
+ 
+-        for(Good good: list){
+-            if(good.getCurrency() != car){
++        for(Commodity commodity : commodities){
++            if(commodity.getCurrency() != car){
+                 result = false;
+                 break;
+             }
+@@ -83,14 +83,14 @@
+         SearchPage searchPage = homePage.search("dress");
+         Assert.assertTrue(searchPage.atPage());
+         searchPage.sortGoods("desc");
+-        List<Good> list = searchPage.getListOfGoods();
++        List<Commodity> commodities = searchPage.getListOfGoods();
+ 
+-        double price = list.get(0).getBasicPrice();
++        double price = commodities.get(0).getBasicPrice();
+         boolean result = true;
+ 
+-        for(Good good: list){
+-            if(good.getBasicPrice() <= price){
+-                price = good.getBasicPrice();
++        for(Commodity commodity : commodities){
++            if(commodity.getBasicPrice() <= price){
++                price = commodity.getBasicPrice();
+             }
+             else{
+                 result = false;
+@@ -110,14 +110,14 @@
+         SearchPage searchPage = homePage.search("dress");
+         Assert.assertTrue(searchPage.atPage());
+         searchPage.sortGoods("desc");
+-        List<Good> list = searchPage.getListOfGoods();
++        List<Commodity> commodities = searchPage.getListOfGoods();
+         boolean result = true;
+ 
+-        for(Good good: list){
+-            if(good.getDiscount() > 0.0){
+-                double expectedPriceWithDiscount = (Math.round((good.getBasicPrice() *
+-                        ((100.0 - good.getDiscount()) / 100.0)) * 100.0) / 100.0);
+-                if(expectedPriceWithDiscount != good.getActualPrice()){
++        for(Commodity commodity : commodities){
++            if(commodity.getDiscount() > 0.0){
++                double expectedPriceWithDiscount = (Math.round((commodity.getBasicPrice() *
++                        ((100.0 - commodity.getDiscount()) / 100.0)) * 100.0) / 100.0);
++                if(expectedPriceWithDiscount != commodity.getActualPrice()){
+                     result = false;
+                     break;
+                 }
+Index: src/main/java/web_pages/HomePage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/web_pages/HomePage.java	(revision 8275a6b069c6e8063d7fbb97f16322dfce0d12ce)
++++ src/main/java/web_pages/HomePage.java	(date 1592175787875)
+@@ -71,9 +71,9 @@
+         logger.info("Currency was got from Header");
+         return ch;
+     }
+-    public List<Good> getListOfGoods(){
++    public List<Commodity> getListOfGoods(){
+         List<WebElement> list = driver.findElements(PRODUCT_DESCRIPTION);
+-        List<Good> goodsList = new ArrayList<Good>();
++        List<Commodity> goodsList = new ArrayList<Commodity>();
+ 
+         for(int i = 0; i < list.size(); i++){
+ 
+@@ -92,8 +92,8 @@
+                 discount = list.get(i).findElement(By.xpath("./div/span[@class=\"discount-percentage\"]")).getText();
+             }
+ 
+-            Good good = new Good(name, actualPrice, realPrice, discount);
+-            goodsList.add(good);
++            Commodity commodity = new Commodity(name, actualPrice, realPrice, discount);
++            goodsList.add(commodity);
+ 
+         }
+         logger.info("A List of goods on the page was created and sent");
+Index: src/main/java/web_pages/SearchPage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/web_pages/SearchPage.java	(revision 8275a6b069c6e8063d7fbb97f16322dfce0d12ce)
++++ src/main/java/web_pages/SearchPage.java	(date 1592175787751)
+@@ -103,9 +103,9 @@
+         return currency;
+     }
+ 
+-    public List<Good> getListOfGoods(){
++    public List<Commodity> getListOfGoods(){
+         List<WebElement> list = driver.findElements(PRODUCT_DESCRIPTION);
+-        List<Good> goodsList = new ArrayList<Good>();
++        List<Commodity> goodsList = new ArrayList<Commodity>();
+ 
+         for(int i = 0; i < list.size(); i++){
+ 
+@@ -124,8 +124,8 @@
+                 discount = list.get(i).findElement(By.xpath("./div/span[@class=\"discount-percentage\"]")).getText();
+             }
+ 
+-            Good good = new Good(name, actualPrice, realPrice, discount);
+-            goodsList.add(good);
++            Commodity commodity = new Commodity(name, actualPrice, realPrice, discount);
++            goodsList.add(commodity);
+ 
+         }
+         logger.info("A List of goods on the page was created and sent");
